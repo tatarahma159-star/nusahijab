@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusa Hijab - Produk Hijab Katun, Silk, dll.</title>
+    <style>
+        /* CSS Sederhana untuk Tampilan */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #8B0000; /* Warna Merah Marun/Cokelat */
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .product-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .product-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .product-item h3 {
+            margin-top: 0;
+            color: #8B0000;
+        }
+        .product-item p {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #4CAF50; /* Warna Hijau untuk Harga */
+        }
+        .add-to-cart-btn {
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #A52A2A;
+        }
+        
+        /* Gaya Keranjang Belanja */
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        #cart-items li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        /* Gaya Checkout Form */
+        #checkout-form input, #checkout-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #checkout-form button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Gaya Pop-up */
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Nusa Hijab</h1>
+        <nav>
+            <a href="#" onclick="showPage('home')">Produk</a>
+            <a href="#" onclick="showPage('about')">About Us</a>
+            <a href="#" onclick="toggleCart()">🛒 Keranjang (<span id="cart-count">0</span>)</a>
+        </nav>
+    </header>
+
+    <div id="home-page" class="container">
+        <h2>Koleksi Hijab Eksklusif</h2>
+        <div class="product-grid" id="product-list">
+            </div>
+    </div>
+
+    <div id="about-page" class="container" style="display: none;">
+        <h2>Tentang Nusa Hijab</h2>
+        <p>Nusa Hijab adalah destinasi utama Anda untuk koleksi hijab berkualitas tinggi dengan berbagai pilihan bahan premium. Kami berkomitmen untuk menyediakan produk yang tidak hanya menawan secara visual, tetapi juga nyaman digunakan sepanjang hari.</p>
+        <h3>Bahan Pilihan Kami:</h3>
+        <ul>
+            <li>**Katun:** Adem, nyaman, dan mudah dibentuk.</li>
+            <li>**Silk (Sutra):** Tampilan mewah dan elegan untuk acara spesial.</li>
+            <li>**Plisket:** Tekstur lipatan yang unik dan modis.</li>
+            <li>**Premium:** Bahan pilihan terbaik dengan kualitas jahitan terjamin.</li>
+            <li>**Sifon:** Ringan dan jatuh, ideal untuk gaya anggun.</li>
+            <li>**Voal:** Bahan favorit yang tegak di dahi dan tidak mudah kusut.</li>
+            <li>**Polycotton:** Kombinasi katun dan polyester yang nyaman dan tahan lama.</li>
+        </ul>
+        <p>Kami percaya setiap wanita berhak tampil percaya diri dan anggun. Selamat berbelanja!</p>
+    </div>
+
+    <div id="cart-sidebar">
+        <h3>Keranjang Belanja</h3>
+        <ul id="cart-items">
+            </ul>
+        <p>Total: **Rp<span id="cart-total">0</span>**</p>
+        
+        <button class="add-to-cart-btn" onclick="openCheckout()">Lanjutkan ke Checkout</button>
+
+        <div id="checkout-section" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; display: none;">
+            <h4>Data Pembeli</h4>
+            <form id="checkout-form" onsubmit="handleCheckout(event)">
+                <input type="text" id="buyer-name" placeholder="Nama Lengkap" required>
+                <input type="tel" id="buyer-wa" placeholder="Nomor WhatsApp (Contoh: 0812xxxx)" required>
+                <textarea id="buyer-address" placeholder="Alamat Lengkap (Jalan, No Rumah, Kelurahan, Kecamatan, Kota)" rows="3" required></textarea>
+                <button type="submit">Konfirmasi Pesanan (Simulasi)</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="popup-notification" class="popup">
+        <span id="popup-text">Produk ditambahkan ke keranjang!</span>
+    </div>
+
+    <script>
+        // Data Produk
+        const products = [
+            { id: 1, name: "Hijab Katun Basic", material: "Katun", price: 35000, image: "aset/13c3428d385c681617f6598beefeed1c.jpg" },
+            { id: 2, name: "Hijab Silk Mewah", material: "Silk", price: 85000, image: "aset/d7b552c8-a59f-4540-a62c-7af9ffb8ce18.jpg" },
+            { id: 3, name: "Pashmina Plisket", material: "Plisket", price: 50000,image: "aset/pashmina plisket.jpg" },
+            { id: 4, name: "Segi Empat Premium", material: "Premium", price: 120000, image: "aset/s4 prem.jpg" },
+            { id: 5, name: "Shawl Sifon Polos", material: "Sifon", price: 40000, image: "aset/voal sifon.jpg" },
+            { id: 6, name: "Voal Motif Eksklusif", material: "Voal", price: 75000, image: "aset/shawl.jpg" },
+            { id: 7, name: "Bela Square Polycotton", material: "Polycotton", price: 30000, image: "aset/s4 prem.jpg" }
+        ];
+
+        let cart = []; // Array untuk menyimpan item di keranjang
+
+        // Fungsi untuk Format Angka ke Rupiah
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID').format(number);
+        };
+
+        // 1. Render Produk
+        function renderProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Kosongkan dulu
+
+            products.forEach(product => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'product-item';
+                // Catatan: Karena tidak ada gambar, saya hanya menggunakan placeholder
+                itemDiv.innerHTML = `
+                    <img src="https://via.placeholder.com/250x200?text=${product.material}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Bahan: ${product.material}</p>
+                    <p>Rp${formatRupiah(product.price)}</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Tambah ke Keranjang</button>
+                `;
+                productList.appendChild(itemDiv);
+            });
+        }
+        
+        // 2. Tampilkan Halaman
+        function showPage(pageId) {
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('about-page').style.display = 'none';
+            document.getElementById(`${pageId}-page`).style.display = 'block';
+            document.getElementById('cart-sidebar').classList.remove('open'); // Tutup keranjang saat pindah halaman
+        }
+
+        // 3. Tambah ke Keranjang + Pop-up
+        function addToCart(id, name, price) {
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+
+            renderCart();
+            showPopup(`"${name}" berhasil ditambahkan!`);
+        }
+
+        // Fungsi untuk menampilkan Pop-up
+        function showPopup(message) {
+            const popup = document.getElementById('popup-notification');
+            document.getElementById('popup-text').textContent = message;
+            
+            popup.classList.add('show');
+            
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000); // Pop-up hilang setelah 3 detik
+        }
+
+        // 4. Render Keranjang
+        function renderCart() {
+            const cartItemsEl = document.getElementById('cart-items');
+            const cartCountEl = document.getElementById('cart-count');
+            const cartTotalEl = document.getElementById('cart-total');
+            let total = 0;
+
+            cartItemsEl.innerHTML = '';
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${item.name} (${item.quantity}x) - Rp${formatRupiah(subtotal)}
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">Hapus</button>
+                `;
+                cartItemsEl.appendChild(li);
+            });
+
+            cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotalEl.textContent = formatRupiah(total);
+        }
+
+        // 5. Hapus Item dari Keranjang
+        function removeFromCart(id) {
+            const index = cart.findIndex(item => item.id === id);
+            if (index !== -1) {
+                cart[index].quantity -= 1; // Kurangi kuantitas
+                if (cart[index].quantity <= 0) {
+                    cart.splice(index, 1); // Hapus jika kuantitas nol
+                }
+            }
+            renderCart();
+            showPopup("Item berhasil dihapus/dikurangi.");
+            // Sembunyikan checkout form jika keranjang kosong
+            if (cart.length === 0) {
+                 document.getElementById('checkout-section').style.display = 'none';
+            }
+        }
+        
+        // 6. Toggler Sidebar Keranjang
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
+            // Pastikan form checkout tertutup saat cart dibuka/tutup
+            document.getElementById('checkout-section').style.display = 'none';
+        }
+
+        // 7. Buka Bagian Checkout
+        function openCheckout() {
+            if (cart.length === 0) {
+                alert("Keranjang Anda masih kosong. Silakan tambahkan produk terlebih dahulu.");
+                return;
+            }
+            document.getElementById('checkout-section').style.display = 'block';
+        }
+
+        // 8. Handle Proses Checkout (Simulasi)
+        function handleCheckout(event) {
+            event.preventDefault(); // Mencegah form reload halaman
+
+            const name = document.getElementById('buyer-name').value;
+            const wa = document.getElementById('buyer-wa').value;
+            const address = document.getElementById('buyer-address').value;
+            const total = document.getElementById('cart-total').textContent;
+
+            const orderDetails = cart.map(item => `${item.name} (${item.quantity}x)`).join('\n');
+            
+            // --- Output Data Pembeli dan Pesanan ---
+            const message = `
+                ✅ PESANAN BARU DARI NUSA HIJAB ✅
+                
+                Detail Pembeli:
+                Nama: ${name}
+                No. WA: ${wa}
+                Alamat: ${address}
+
+                Detail Pesanan:
+                ${orderDetails}
+
+                -----------------------------------
+                TOTAL BELANJA: Rp${total}
+
+                Terima kasih! Pesanan Anda telah kami catat.
+                (Fungsi ini adalah simulasi. Untuk e-commerce nyata, data akan dikirim ke server/WA admin.)
+            `;
+
+            alert(message);
+            
+            // Reset Keranjang dan Form
+            cart = [];
+            renderCart();
+            document.getElementById('checkout-form').reset();
+            document.getElementById('checkout-section').style.display = 'none';
+            document.getElementById('cart-sidebar').classList.remove('open');
+            showPopup("Checkout Selesai!");
+        }
+
+        // Inisialisasi
+        window.onload = () => {
+            renderProducts();
+            renderCart();
+        };
+
+    </script>
+
+</body>
+</html>
